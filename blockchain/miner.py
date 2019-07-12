@@ -22,8 +22,8 @@ def proof_of_work(last_proof):
     start = timer()
 
     print("Searching for next proof")
-    proof = 0
-    while valid_proof(last_proof, proof):
+    proof = 997478566604990
+    while valid_proof(last_proof, proof) is False:
         proof += 1
 
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
@@ -38,11 +38,11 @@ def valid_proof(last_hash, proof):
     IE:  last_hash: ...999123456, new hash 123456888...
     """
 
-    last_hash = str(last_hash)
-    guess_first_proof = str(proof).encode()
-
-    guess_proof = hashlib.sha256(guess_first_proof).hexdigest()
-    return last_hash[-6:] == guess_proof[:6]
+    last = str(last_hash).encode()
+    guess = str(proof).encode()
+    guess_hash = hashlib.sha256(guess).hexdigest()
+    lh = hashlib.sha256(last).hexdigest()
+    return str(lh)[-6:] == str(guess_hash)[:6]
 
 
 if __name__ == '__main__':
@@ -80,6 +80,9 @@ if __name__ == '__main__':
         data = r.json()
         if data.get('message') == 'New Block Forged':
             coins_mined += 1
+            f = open("mycoins.txt", "w")
+            f.write("Total coins mined: " + str(coins_mined))
+            f.close()
             print("Total coins mined: " + str(coins_mined))
         else:
             print(data.get('message'))
